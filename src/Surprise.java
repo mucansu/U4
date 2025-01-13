@@ -1,25 +1,33 @@
 import java.util.Random;
-
-public class Surprise implements Diggable {
-    private String type = "Surprise";
+/*
+public class Surprise extends Diggable {
     private int surpriseType;
-    private Random random = new Random();
 
-    public Surprise() {
-        this.surpriseType = random.nextInt(4) + 1; // 1-4 arası rastgele sürpriz tipi
-    }
-
-    public int getSurpriseType() {
-        return surpriseType;
+    public Surprise(int surpriseType) {
+        super("Surprise", 0);
+        this.surpriseType = surpriseType;
     }
 
     @Override
-    public int getValue() {
-        return 0; // Sürprizlerin doğrudan puan değeri yok
-    }
-
-    @Override
-    public String getType() {
-        return type;
+   /* public void onDig(GameController controller, GameView view) {
+        switch (surpriseType) {
+            case 1:
+                controller.addCrew();
+                view.displayMessage("Bir sürpriz! Ekstra mürettebat kazandınız!");
+                break;
+            case 2:
+                controller.addExtraTurns();
+                view.displayMessage("Bir sürpriz! Ekstra turlar kazandınız!");
+                break;
+            case 3:
+                view.displayMessage("Rastgele bir hazine açıldı!");
+                // Rastgele bir hazine açma işlemi burada yapılabilir
+                break;
+            case 4:
+                controller.activateRandomTurn();
+                view.displayMessage("Bir sürpriz! Rastgele tur aktif!");
+                break;
+        }
     }
 }
+*/

@@ -1,93 +1,100 @@
-class GameController {
+import java.util.Random;
+
+// GameController class
+public class GameController {
     private Diggable[][] board;
-    private int currentPlayer = 0; // 0 for player 1, 1 for player 2
-    private int[] playerScores = {0, 0};
-    private int[] crewMembers = {3, 3};
+    private int currentPlayer; // 0 for Player 1, 1 for Player 2
+    private int currentRow;
+    private int currentCol;
+    private int[] playerScores;
+    private int[] crewMembers;
     private GameView view;
-    private HighScoreManager highScoreManager;
 
     public GameController(int size, GameView view) {
         this.view = view;
         board = new Diggable[size][size];
+        playerScores = new int[] {0, 0};
+        crewMembers = new int[] {3, 3};
         initializeBoard();
-        highScoreManager = new HighScoreManager();
-    }
-
-    public int getCurrentPlayer() {
-        return currentPlayer;
     }
 
     private void initializeBoard() {
-        // Basic treasure placement (expand this)
-        board[2][2] = new Treasure(50);
-        board[5][5] = new Trap();
-        board[8][1] = new Treasure(25);
+        // Hard-coded board for simplicity
+        board[0][0] = new Treasure(TreasureType.GOLDBOX); // Single-cell treasure
+        board[1][1] = new Treasure(TreasureType.BRONZBOX); // Single-cell treasure
+        board[4][4] = new Treasure(TreasureType.SILVERBOX); // Single-cell treasure
+
+// Multi-cell treasures
+        board[5][5] = new Treasure(TreasureType.WOODENBOX); // Part of "L" shaped treasure
+        board[6][5] = new Treasure(TreasureType.DIAMONDBOX);
+        board[6][6] = new Treasure(TreasureType.WOODENBOX);
+
+        board[7][7] = new Treasure(TreasureType.WOODENBOX); // Part of "T" shaped treasure
+        board[7][8] = new Treasure(TreasureType.GOLDBOX);
+        board[6][8] = new Treasure(TreasureType.SILVERBOX);
+        board[8][8] = new Treasure(TreasureType.SILVERBOX);
+
+        board[8][0] = new Treasure(TreasureType.WOODENBOX); // Part of "I" shaped treasure
+        board[8][1] = new Treasure(TreasureType.WOODENBOX);
+        board[8][2] = new Treasure(TreasureType.SILVERBOX);
+        board[9][9] = new Trap(-50);
+        // Remaining cells are null, representing empty spots
     }
 
     public void dig(int row, int col) {
+        currentRow = row;
+        currentCol = col;
+
+        // Immediately mark the button as dug
         if (board[row][col] != null) {
-            Diggable item = board[row][col];
-            view.updateBoard(row, col, item.getType());
-
-            if (item instanceof Treasure) {
-                playerScores[currentPlayer] += item.getValue();
-            } else if (item instanceof Trap) {
-                crewMembers[currentPlayer]--;
-                playerScores[currentPlayer] += item.getValue();//Negatif puan ekleniyor
-                view.displayMessage("Tuzağa yakalandın! Puan Kaybı ve Mürettebat Kaybı!");
-            } else if (item instanceof Surprise) {
-                Surprise surprise = (Surprise) item;
-                handleSurprise(surprise.getSurpriseType());
-            }
-
-            view.updateScore(playerScores);
-            view.updateCrew(crewMembers);
-            board[row][col] = null; // Tekrar kazmayı engelle
-
-            checkGameOver();
-            if(!view.isExtraTurnsActive() && !view.isRandomTurnActive()) { //Ekstra tur yoksa ve rastgele tur aktif değilse sıra değişir
-                currentPlayer = 1 - currentPlayer; // Sıra değiştir
-                view.updateTurn(currentPlayer);
-            }
-            view.resetTurnFlags();
+            view.updateBoard(row, col, board[row][col].getType());
+            board[row][col].onDig(this, view);
+            board[row][col] = null; // Clear the cell after digging
         } else {
-            view.updateBoard(row, col, "Boş");
-            currentPlayer = 1 - currentPlayer;
-            view.updateTurn(currentPlayer);
+            view.updateBoard(row, col, "Empty");
+           // view.displayMessage("Nothing here. Try again!");
         }
+
+        nextTurn();
     }
 
+    public void addScore(int score) {
+        playerScores[currentPlayer] += score;
+        view.updateScore(playerScores);
+    }
 
-    private void handleSurprise(int surpriseType) {
-        switch (surpriseType) {
-            case 1:
-                crewMembers[currentPlayer]++;
-                view.displayMessage("Ekstra mürettebat kazandın!");
-                break;
-            case 2:
-                view.setExtraTurns(crewMembers[currentPlayer]);
-                view.displayMessage("Ekstra turlar kazandın!");
-                break;
-            case 3:
-                // Rastgele bir hazineyi aç (Daha sonra implemente edilecek - İleri seviye)
-                view.displayMessage("Rastgele bir hazine açıldı! (Henüz implemente edilmedi)");
-                break;
-            case 4:
-                view.setRandomTurn();
-                view.displayMessage("Sıradaki turun rastgele seçildi!");
-                break;
-        }
+    public void reduceCrew() {
+        crewMembers[currentPlayer]--;
         view.updateCrew(crewMembers);
+        checkGameOver();
     }
-    public void checkGameOver(){
+
+    public void checkGameOver() {
         if (crewMembers[currentPlayer] <= 0) {
-            view.displayMessage("Oyuncu " + (currentPlayer + 1) + " tüm mürettebatını kaybetti!");
-            int winner = 1 - currentPlayer;
-            String playerName = view.getPlayerName();
-            highScoreManager.addHighScore(playerName, playerScores[winner]);
-            highScoreManager.saveHighScores();
-            view.showHighScores(highScoreManager.getHighScores());
-            view.endGame();
+            view.displayMessage("Player " + (currentPlayer + 1) + " is out of crew members. Game over!");
+            // Reset or end game logic
         }
+    }
+
+    public void nextTurn() {
+        currentPlayer = 1 - currentPlayer; // Toggle between 0 and 1
+        view.updateTurn(currentPlayer);
+    }
+
+    public int getCurrentRow() {
+        return currentRow;
+    }
+
+    public int getCurrentCol() {
+        return currentCol;
+    }
+    public int getPlayerScore() {
+        return playerScores[currentPlayer];
+    }
+    public void addOpponentScore(int score) {
+        int opponent = 1 - currentPlayer;
+        playerScores[opponent] += score;
+        view.updateScore(playerScores);
     }
 }
+
