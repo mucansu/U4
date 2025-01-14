@@ -1,8 +1,5 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class HighScoreManager {
     private List<HighScoreEntry> highScores;
@@ -15,9 +12,9 @@ public class HighScoreManager {
 
     public void addHighScore(String name, int score) {
         highScores.add(new HighScoreEntry(name, score));
-        Collections.sort(highScores, Comparator.comparingInt(HighScoreEntry::getScore).reversed());
+        highScores.sort(Comparator.comparingInt(HighScoreEntry::getScore).reversed());
         if (highScores.size() > 10) {
-            highScores.remove(10); // En yüksek 10 skoru tut
+            highScores.remove(10);
         }
     }
 
@@ -37,7 +34,7 @@ public class HighScoreManager {
                 }
             }
         } catch (IOException | NumberFormatException e) {
-            // Dosya yoksa veya format hatalıysa sorun değil, boş liste ile devam et
+            // Dosya yoksa sorun değil, boş liste
         }
     }
 
@@ -48,7 +45,7 @@ public class HighScoreManager {
                 writer.newLine();
             }
         } catch (IOException e) {
-            e.printStackTrace(); // Hata olursa konsola yazdır
+            e.printStackTrace();
         }
     }
 }

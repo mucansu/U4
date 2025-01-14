@@ -1,7 +1,6 @@
-class HighScoreEntry {
+public class HighScoreEntry {
     private String name;
     private int score;
-
 
     public HighScoreEntry(String name, int score) {
         this.name = name;

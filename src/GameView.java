@@ -1,9 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-// GameView class
+
 public class GameView extends JFrame {
     private JButton[][] buttons;
     private JLabel[] scoreLabels;
@@ -16,9 +13,10 @@ public class GameView extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Initialize board panel
+        // Board panel
         JPanel boardPanel = new JPanel(new GridLayout(size, size));
         buttons = new JButton[size][size];
+
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 buttons[i][j] = new JButton("");
@@ -30,18 +28,21 @@ public class GameView extends JFrame {
         }
         add(boardPanel, BorderLayout.CENTER);
 
-        // Initialize info panel
+        // Info panel
         JPanel infoPanel = new JPanel(new GridLayout(3, 2));
         scoreLabels = new JLabel[2];
         crewLabels = new JLabel[2];
+
         for (int i = 0; i < 2; i++) {
             scoreLabels[i] = new JLabel("Player " + (i + 1) + " Score: 0");
             crewLabels[i] = new JLabel("Player " + (i + 1) + " Crew: 3");
             infoPanel.add(scoreLabels[i]);
             infoPanel.add(crewLabels[i]);
         }
+
         turnLabel = new JLabel("Player 1's turn");
         infoPanel.add(turnLabel);
+
         add(infoPanel, BorderLayout.SOUTH);
 
         pack();
@@ -52,8 +53,8 @@ public class GameView extends JFrame {
         this.controller = controller;
     }
 
-    public void updateBoard(int row, int col, String type) {
-        buttons[row][col].setText(type);
+    public void updateBoard(int row, int col, String text) {
+        buttons[row][col].setText(text);
         buttons[row][col].setEnabled(false);
     }
 

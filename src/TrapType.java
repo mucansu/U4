@@ -1,24 +1,23 @@
 
 
-public enum TrapType {
-    WOODENBOX(10, "Wooden Box"),
-    BRONZBOX(20, "Bronz Box"),
-    SILVERBOX(50, "Silver Box"),
-    GOLDBOX(75, "Gold Box"),
-    DIAMONDBOX(100, "Diamond Box");
+enum TrapType {
+    SPIKED_PIT("Spiked Pit", -100),
+    POISON_GAS("Poison Gas", -50),
+    COLLAPSING_TUNNEL("Collapsing Tunnel", -75);
+
     private final String name;
-    private final int value;
+    private final int effect;
 
-    TrapType(int value,String name) {
-        this.value = value;
+    TrapType(String name, int effect) {
         this.name = name;
+        this.effect = effect;
     }
 
-    public int getValue() {
-        return value;
-    }
-
-    public String getName(){
+    public String getName() {
         return name;
+    }
+
+    public int getEffect() {
+        return effect;
     }
 }

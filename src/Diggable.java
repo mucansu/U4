@@ -1,10 +1,6 @@
-import java.util.*;
-import javax.swing.*;
-
-// Abstract base class for diggable items
 public abstract class Diggable {
-    protected String type;
-    protected int value;
+    protected String type; // Örneğin "Spiked Pit" veya "Gold Box"
+    protected int value;   // Kazma durumunda etki edebilecek puan/etki değeri
 
     public Diggable(String type, int value) {
         this.type = type;
@@ -19,6 +15,9 @@ public abstract class Diggable {
         return value;
     }
 
-    // Abstract method to define digging logic
-    public abstract void onDig(GameController controller, GameView view);
+    /**
+     * Artık GameController nesnesi almıyor,
+     * sadece ne etkisi olacağını anlatan bir DigResult döndürüyor.
+     */
+    public abstract DigResult onDig();
 }
