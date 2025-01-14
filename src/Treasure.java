@@ -14,7 +14,10 @@ public class Treasure extends Diggable {
                 treasureType.getName(),
                 treasureType.getValue(),
                 0,
-                "You found a " + treasureType.getName() + "!"
+                "You found a " + treasureType.getName() + "!",
+                false,
+                false
         );
     }
+
 }

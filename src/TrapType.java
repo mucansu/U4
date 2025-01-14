@@ -1,23 +1,16 @@
-
-
-enum TrapType {
-    SPIKED_PIT("Spiked Pit", -100),
-    POISON_GAS("Poison Gas", -50),
-    COLLAPSING_TUNNEL("Collapsing Tunnel", -75);
+public enum TrapType {
+    FIXED_SCORE_LOSS("Fixed Score Loss", 100),
+    PERCENT_TO_OPPONENT("Percent Score To Opponent", 20),
+    CREW_LOSS("Crew Loss", 1);
 
     private final String name;
-    private final int effect;
+    private final int effectValue;
 
-    TrapType(String name, int effect) {
+    TrapType(String name, int effectValue) {
         this.name = name;
-        this.effect = effect;
+        this.effectValue = effectValue;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public int getEffect() {
-        return effect;
-    }
+    public String getName() { return name; }
+    public int getEffectValue() { return effectValue; }
 }

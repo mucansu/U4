@@ -2,21 +2,50 @@ public class Trap extends Diggable {
     private TrapType trapType;
 
     public Trap(TrapType trapType) {
-        // trapType.getEffect() negatif sayı
-        super(trapType.getName(), trapType.getEffect());
+        super(trapType.getName(), trapType.getEffectValue());
         this.trapType = trapType;
     }
 
     @Override
     public DigResult onDig() {
-        // Tuzak kazılınca neler olsun?
-        // Örneğin: -50 puan, 0 ekip değişimi, "Tuzak yakalandı" mesajı
-        return new DigResult(
-                trapType.getName(),       // name
-                trapType.getEffect(),     // scoreChange (negatif değer)
-                0,                        // crewChange
-                "Triggered trap: " + trapType.getName()
-        );
+        // Farklı trapType senaryoları
+        switch (trapType) {
+            case FIXED_SCORE_LOSS:
+                // Örneğin 100 puan kaybettir
+                return new DigResult(
+                        trapType.getName(),
+                        -trapType.getEffectValue(), // -100
+                        0,
+                        "You triggered a trap: " + trapType.getName() + " (lose " + trapType.getEffectValue() + " points).",
+                        false,
+                        false
+                );
+            case PERCENT_TO_OPPONENT:
+                // Rakibe kendi puanından belli yüzde ver
+                // Controller bu veriyi isPercent tipinde bir field ile ayıklayabilir
+                return new DigResult(
+                        trapType.getName(),
+                        0, // puanı buradan düşmemek, Controller handle edebilir
+                        0,
+                        "Trap: " +  trapType.getName() + ", gave " + trapType.getEffectValue() +" procent of your points to opponent!",
+                        false,
+                        false
+                );
+            case CREW_LOSS:
+                // 1 crew kaybettir
+                return new DigResult(
+                        trapType.getName(),
+                        0,
+                        -1,
+                        "Trap: " + trapType.getName() + "! You lost a crew member.",
+                        false,
+                        false
+                );
+            default:
+                return new DigResult(
+                        "UnknownTrap", 0, 0, "No effect", false, false
+                );
+        }
     }
 }
 

@@ -1,33 +1,53 @@
-import java.util.Random;
-/*
 public class Surprise extends Diggable {
-    private int surpriseType;
+    private SurpriseType type;
 
-    public Surprise(int surpriseType) {
-        super("Surprise", 0);
-        this.surpriseType = surpriseType;
+    public Surprise(SurpriseType type) {
+        super(type.getName(), 0);
+        this.type = type;
     }
 
     @Override
-   /* public void onDig(GameController controller, GameView view) {
-        switch (surpriseType) {
-            case 1:
-                controller.addCrew();
-                view.displayMessage("Bir sürpriz! Ekstra mürettebat kazandınız!");
-                break;
-            case 2:
-                controller.addExtraTurns();
-                view.displayMessage("Bir sürpriz! Ekstra turlar kazandınız!");
-                break;
-            case 3:
-                view.displayMessage("Rastgele bir hazine açıldı!");
-                // Rastgele bir hazine açma işlemi burada yapılabilir
-                break;
-            case 4:
-                controller.activateRandomTurn();
-                view.displayMessage("Bir sürpriz! Rastgele tur aktif!");
-                break;
+    public DigResult onDig() {
+        switch (type) {
+            case EXTRA_CREW:
+                return new DigResult(
+                        type.getName(),
+                        0,
+                        +1,
+                        "Overraskning: Gained 1 crew member!",
+                        false,
+                        false
+                );
+            case EXTRA_TURN_PER_CREW:
+                // Controller bu flag'ları yorumlayacak
+                return new DigResult(
+                        type.getName(),
+                        0,
+                        0,
+                        "Överraskning: You get extra moves",
+                        true, // extraTurn
+                        false
+                );
+            case RANDOM_DIG:
+                return new DigResult(
+                        type.getName(),
+                        0,
+                        0,
+                        "Överraskning: A random cell was dug automatically!",
+                        false,
+                        false
+                );
+            case FORCED_RANDOM_NEXT:
+                return new DigResult(
+                        type.getName(),
+                        0,
+                        0,
+                        "Overraskning: Your next move will be forced random!",
+                        false,
+                        true
+                );
+            default:
+                return new DigResult("Unknown Surprise", 0, 0, "", false, false);
         }
     }
 }
-*/

@@ -1,6 +1,6 @@
 public abstract class Diggable {
-    protected String type; // Örneğin "Spiked Pit" veya "Gold Box"
-    protected int value;   // Kazma durumunda etki edebilecek puan/etki değeri
+    protected String type;
+    protected int value;
 
     public Diggable(String type, int value) {
         this.type = type;
@@ -16,8 +16,7 @@ public abstract class Diggable {
     }
 
     /**
-     * Artık GameController nesnesi almıyor,
-     * sadece ne etkisi olacağını anlatan bir DigResult döndürüyor.
+     * Model katmanı, kazma sonucunda neler olduğunu DigResult ile döndürür.
      */
     public abstract DigResult onDig();
 }

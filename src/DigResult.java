@@ -1,29 +1,34 @@
 public class DigResult {
-    private final String name;       // Trap/Treasure ismi gibi ekranda göstermek istediğimiz bilgi
-    private final int scoreChange;   // Kazanınca eklenen(+), kaybedince çıkarılan(-) puan
-    private final int crewChange;    // Kazanınca eklenen(+), kaybedince çıkarılan(-) ekip üyesi
+    private final String name;       // Örneğin "Spiked Pit", "Gold Box", "Surprise" vb.
+    private final int scoreChange;   // (+) veya (-) puan
+    private final int crewChange;    // (+) veya (-) crew
     private final String message;    // Kullanıcıya gösterilecek mesaj
 
-    public DigResult(String name, int scoreChange, int crewChange, String message) {
+    // Overraskning etkileri gibi ek alanlar isterseniz burada tutabilirsiniz
+    private final boolean extraTurn;       // Örnek: sürpriz ile ekstra tur verilsin mi?
+    private final boolean forcedRandomNext; // Örnek: bir sonraki hamle rastgele mi olsun?
+
+    public DigResult(
+            String name,
+            int scoreChange,
+            int crewChange,
+            String message,
+            boolean extraTurn,
+            boolean forcedRandomNext
+    ) {
         this.name = name;
         this.scoreChange = scoreChange;
         this.crewChange = crewChange;
         this.message = message;
+        this.extraTurn = extraTurn;
+        this.forcedRandomNext = forcedRandomNext;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public int getScoreChange() {
-        return scoreChange;
-    }
-
-    public int getCrewChange() {
-        return crewChange;
-    }
-
-    public String getMessage() {
-        return message;
-    }
+    public String getName() { return name; }
+    public int getScoreChange() { return scoreChange; }
+    public int getCrewChange() { return crewChange; }
+    public String getMessage() { return message; }
+    public boolean isExtraTurn() { return extraTurn; }
+    public boolean isForcedRandomNext() { return forcedRandomNext; }
 }
