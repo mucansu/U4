@@ -1,10 +1,23 @@
+/**
+ * Representerar en grupp av sammanhängande skatter som delas upp i flera delar.
+ * Gruppens poäng tillfaller spelaren som gräver den sista delen av skatten.
+ *
+ * @author Mustafa
+ */
+
 public class TreasureGroup {
     private String name;        // Örneğin "T-form treasure"
     private int totalValue;     // Tüm define bitince verilecek puan
     private int totalCells;     // Kaç hücre var
     private int dugCells;       // Kaç hücre kazıldı
     private boolean claimed;    // Daha önce bir oyuncu bu define puanını aldı mı?
-
+    /**
+     * Skapar en ny skattgrupp med ett namn, totalt värde och antal celler.
+     *
+     * @param name Namnet på skattgruppen.
+     * @param totalValue Det totala poängvärdet för gruppen.
+     * @param totalCells Antalet celler som gruppen består av.
+     */
     public TreasureGroup(String name, int totalValue, int totalCells) {
         this.name = name;
         this.totalValue = totalValue;
@@ -17,9 +30,9 @@ public class TreasureGroup {
     public int getValue() { return totalValue; }
 
     /**
-     * Her bir hücre kazıldığında çağrılır.
-     * Son hücre kazıldıysa DigResult ile puanı "son kazan oyuncu" alacak şekilde iletir.
-     * Daha önce claim edilmediyse puan verilir.
+     * Markerar en del av skatten som grävd.
+     *
+     * @return Ett {@link DigResult} som indikerar om skatten är helt grävd och tilldelar poäng.
      */
     public DigResult digPart() {
         if (claimed) {

@@ -1,6 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
-
+/**
+ * Klass som hanterar det grafiska användargränssnittet för spelet.
+ * Innehåller spelbrädet och kontrollpaneler för att visa spelarpoäng, besättningsstatus
+ * och andra interaktiva element.
+ *
+ * @author Mustafa
+ */
 public class GameView extends JFrame {
     private JButton[][] buttons;
     private JLabel[] scoreLabels;
@@ -8,7 +14,12 @@ public class GameView extends JFrame {
     private JLabel turnLabel;
 
     private GameController controller;
-
+    // Konstruktor och metoder
+    /**
+     * Skapar ett nytt grafiskt fönster för spelet med ett visst brädstorlek.
+     *
+     * @param size Storleken på spelbrädet (antal rader och kolumner).
+     */
     public GameView(int size) {
         setTitle("Treasure Hunt");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -55,7 +66,11 @@ public class GameView extends JFrame {
         pack();
         setVisible(true);
     }
-
+    /**
+     * Kopplar GameController till vyn för att hantera användarens interaktioner.
+     *
+     * @param controller Kontrollklass som hanterar spelets logik.
+     */
     public void setController(GameController controller) {
         this.controller = controller;
     }

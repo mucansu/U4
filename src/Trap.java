@@ -1,11 +1,25 @@
+/**
+ * Representerar en fälla i spelet som kan påverka spelaren negativt vid grävning.
+ * Varje fälla har en typ och en specifik effekt, till exempel poängförlust eller besättningsförlust.
+ *
+ * @author Mustafa
+ */
 public class Trap extends Diggable {
     private TrapType trapType;
-
+    /**
+     * Skapar en ny fälla av en specifik typ.
+     *
+     * @param trapType Typen av fällan.
+     */
     public Trap(TrapType trapType) {
         super(trapType.getName(), trapType.getEffectValue());
         this.trapType = trapType;
     }
-
+    /**
+     * Definierar vad som händer när fällan grävs.
+     *
+     * @return Ett {@link DigResult} som beskriver effekten av fällan.
+     */
     @Override
     public DigResult onDig() {
         // Farklı trapType senaryoları

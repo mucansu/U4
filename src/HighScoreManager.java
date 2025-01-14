@@ -1,14 +1,30 @@
 import java.io.*;
 import java.util.*;
-
+/**
+ * Klass som hanterar highscore-listan, inklusive att spara, ladda och lägga till nya poster.
+ * Highscore-listan sparas i en textfil och är begränsad till de 10 bästa resultaten.
+ *
+ * @author Mustafa
+ */
 public class HighScoreManager {
     private List<HighScoreEntry> highScores;
     private static final String HIGH_SCORE_FILE = "highscores.txt";
 
+
+    /**
+     * Skapar en ny instans av HighScoreManager och laddar befintliga poäng från filen.
+     */
     public HighScoreManager() {
         highScores = new ArrayList<>();
         loadHighScores();
     }
+    /**
+     * Lägger till en ny highscore till listan och sorterar den.
+     * Tar bort den lägsta posten om listan överstiger 10 poster.
+     *
+     * @param name Namnet på spelaren.
+     * @param score Spelarens poäng.
+     */
     public void addHighScore(String name, int score) {
         // Yeni skor kaydını ekle
         highScores.add(new HighScoreEntry(name, score));
@@ -31,11 +47,17 @@ public class HighScoreManager {
         }
     }
 
-
+    /**
+     * Hämtar alla highscore-poster.
+     *
+     * @return En lista över highscore-poster.
+     */
     public List<HighScoreEntry> getHighScores() {
         return highScores;
     }
-
+    /**
+     * Laddar highscore-poster från en textfil.
+     */
     private void loadHighScores() {
         try (BufferedReader reader = new BufferedReader(new FileReader(HIGH_SCORE_FILE))) {
             String line;
@@ -51,7 +73,9 @@ public class HighScoreManager {
             // Dosya yoksa sorun değil, boş liste
         }
     }
-
+    /**
+     * Sparar den aktuella highscore-listan till en textfil.
+     */
     public void saveHighScores() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(HIGH_SCORE_FILE))) {
             for (HighScoreEntry entry : highScores) {
@@ -62,6 +86,12 @@ public class HighScoreManager {
             e.printStackTrace();
         }
     }
+    /**
+     * Kontrollerar om en given poäng kvalificerar sig för highscore-listan.
+     *
+     * @param score Poängen som ska kontrolleras.
+     * @return True om poängen kvalificerar sig, annars false.
+     */
     public boolean qualifies(int score) {
         // Henüz 10’dan az kayıt varsa otomatik olarak girer
         if (highScores.size() < 10) {

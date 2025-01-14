@@ -1,24 +1,34 @@
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Kontrollklass som hanterar spelets logik, spelbrädet och spelarnas interaktioner.
+ * Implementerar reglerna och ansvarar för att hantera händelser i spelet.
+ *
+ * @author Mustafa
+ */
 public class GameController {
     private Diggable[][] board;
-    private int currentPlayer;          // 0: P1, 1: P2
-    private int[] playerScores;         // 2 oyuncu
-    private int[] crewMembers;          // 2 oyuncu
+    private int currentPlayer;
+    private int[] playerScores;
+    private int[] crewMembers;
     private GameView view;
     private HighScoreManager highScoreManager;
 
-    // Örnek: next move random
-    private boolean[] forcedRandom;     // [2] => her oyuncu için
 
-    // Bilgi: extra moves left
-    private int[] extraMoves;           // Sürpriz ile geldi diyelim
+    private boolean[] forcedRandom;
 
-    // TreasureGroup’ları takip edelim
+    // extra moves left
+    private int[] extraMoves;
+
+
     private List<TreasureGroup> allTreasures;
-
+    /**
+     * Konstruktor för att skapa en ny GameController.
+     *
+     * @param size Storleken på spelbrädet.
+     * @param view Spelvyn för att uppdatera GUI.
+     */
     public GameController(int size, GameView view) {
         this.view = view;
         board = new Diggable[size][size];
@@ -32,24 +42,26 @@ public class GameController {
 
         initializeBoard();
     }
-
+    /**
+     * Initialiserar spelbrädet med objekt som skatter, fällor och överraskningar.
+     */
     private void initializeBoard() {
 
-        //   1) L şekilli define (toplam 4 hücre)
+
         TreasureGroup lShape = new TreasureGroup("L-Shape", 50, 4);
-        //   Bu define’ı 4 hücreye yerleştirelim, diyelim (0,0), (1,0), (2,0), (2,1)
+
         board[0][0] = new TreasurePart(lShape);
         board[1][0] = new TreasurePart(lShape);
         board[2][0] = new TreasurePart(lShape);
         board[2][1] = new TreasurePart(lShape);
         allTreasures.add(lShape);
 
-        // 2) Tek hücrelik define
+
         TreasureGroup single1 = new TreasureGroup("SingleGold", 75, 1);
         board[0][5] = new TreasurePart(single1);
         allTreasures.add(single1);
 
-        // 3) T şekilli define
+
         TreasureGroup tShape = new TreasureGroup("T-Shape", 60, 4);
         board[4][4] = new TreasurePart(tShape);
         board[4][5] = new TreasurePart(tShape);
@@ -57,7 +69,7 @@ public class GameController {
         board[5][5] = new TreasurePart(tShape);
         allTreasures.add(tShape);
 
-        // 4) Kare (Square) Shape
+
         TreasureGroup squareShape = new TreasureGroup("SquareShape", 40, 4);
         board[7][7] = new TreasurePart(squareShape);
         board[7][8] = new TreasurePart(squareShape);
@@ -65,13 +77,13 @@ public class GameController {
         board[8][8] = new TreasurePart(squareShape);
         allTreasures.add(squareShape);
 
-        // 5) İkili (2 hücreli) Treasure
+
         TreasureGroup twoCellTreasure = new TreasureGroup("TwoCell", 30, 2);
         board[3][0] = new TreasurePart(twoCellTreasure);
         board[3][1] = new TreasurePart(twoCellTreasure);
         allTreasures.add(twoCellTreasure);
 
-        // 4) Trap’ler
+
         board[3][3] = new Trap(TrapType.FIXED_SCORE_LOSS);
         board[2][7] = new Trap(TrapType.PERCENT_TO_OPPONENT);
         board[6][6] = new Trap(TrapType.CREW_LOSS);
@@ -82,13 +94,16 @@ public class GameController {
         board[9][8] = new Trap(TrapType.CREW_LOSS);
         board[9][7] = new Trap(TrapType.CREW_LOSS);
 
-        // 5) Surprise’ler
+
         board[8][2] = new Surprise(SurpriseType.EXTRA_CREW);
         board[7][7] = new Surprise(SurpriseType.EXTRA_TURN_PER_CREW);
 
 
-        // Geri kalan hücreler boş
+
     }
+    /**
+     * Initialiserar ett alternativt spelbräde med olika konfigurationer.
+     */
     private void initializeBoard2() {
         // 1) L-Shape
         TreasureGroup lShape = new TreasureGroup("L-Shape", 50, 4);
@@ -140,21 +155,19 @@ public class GameController {
         // Kalan hücreler boş
     }
 
-
+    /**
+     * Hanterar en spelares grävning på en specifik position.
+     *
+     * @param row Radpositionen på spelbrädet.
+     * @param col Kolumnpositionen på spelbrädet.
+     */
     public void dig(int row, int col) {
         if (crewMembers[currentPlayer] <= 0) {
             view.displayMessage("Player " + (currentPlayer+1) + " has no crew!");
             return;
         }
 
-        // Zorunlu rastgele hamle varsa?
-        if (forcedRandom[currentPlayer]) {
-            int[] r = pickRandomCell();
-            row = r[0]; col = r[1];
-            forcedRandom[currentPlayer] = false; // resetliyoruz
-        }
 
-        // Hücre dolu mu?
         if (board[row][col] != null) {
             Diggable entity = board[row][col];
             DigResult result = entity.onDig();
@@ -220,7 +233,9 @@ public class GameController {
 
         checkGameOver();
     }
-
+    /**
+     * Växlar tur till nästa spelare.
+     */
     private void nextTurn() {
         currentPlayer = 1 - currentPlayer;
         view.updateTurn(currentPlayer);
@@ -230,9 +245,7 @@ public class GameController {
         return board;
     }
     /**
-     * Oyun bitiş kontrolü:
-     * 1. Ekip 0 ise bitiyor
-     * 2. Tüm define’ler kazıldıysa da bitiyor
+     * Kontrollerar om spelet är över och hanterar avslutningslogik.
      */
     private void checkGameOver() {
         // Ekip 0?
@@ -258,7 +271,11 @@ public class GameController {
             endGame(winner);
         }
     }
-
+    /**
+     * Hämtar värdet int som index för vinnare.
+     *
+     * @return Index för vinnande spelare.
+     */
     private int getWinner() {
         int winner;
 
@@ -280,7 +297,11 @@ public class GameController {
         }
         return winner;
     }
-
+    /**
+     * Hanterar spelets slut, visar vinnaren och highscore-listan.
+     *
+     * @param winnerIndex Index för vinnande spelare (0 eller 1).
+     */
     private void endGame(int winnerIndex) {
         if (winnerIndex==2){
             view.displayMessage("GAME OVER. No Winner! ");
@@ -313,7 +334,9 @@ public class GameController {
 
     }
 
-
+    /**
+     * Startar ett nytt spel och återställer spelbrädet.
+     */
     private void startNewGame() {
         // Tekrar 10x10 board kur vs.
         for (int i=0; i<board.length; i++) {
@@ -334,7 +357,11 @@ public class GameController {
         currentPlayer = 0;
         view.updateTurn(currentPlayer);
     }
-
+    /**
+     * Plockar en slumpmässig tom cell på spelbrädet.
+     *
+     * @return En array med rad- och kolumnindex för en slumpmässig cell.
+     */
     private int[] pickRandomCell() {
         // Rastgele bir hücre seç
         int rows = board.length;
@@ -346,7 +373,9 @@ public class GameController {
             return new int[]{r,c};
         }
     }
-
+    /**
+     * Avslutar spelet manuellt via GUI.
+     */
     public void endGameManually() {
         if (playerScores[0]==playerScores[1]){
            endGame(2);

@@ -1,11 +1,25 @@
+/**
+ * Klass som representerar en överraskning på spelbrädet.
+ * Kan ha olika typer av effekter såsom extra tur eller slumpmässiga drag.
+ *
+ * @author Mustafa
+ */
 public class Surprise extends Diggable {
     private SurpriseType type;
-
+    /**
+     * Skapar en ny överraskning av en viss typ.
+     *
+     * @param type Typen av överraskningen.
+     */
     public Surprise(SurpriseType type) {
         super(type.getName(), 0);
         this.type = type;
     }
-
+    /**
+     * Definierar vad som händer när överraskningen grävs.
+     *
+     * @return Ett {@link DigResult} som beskriver effekterna av överraskningen.
+     */
     @Override
     public DigResult onDig() {
         switch (type) {
