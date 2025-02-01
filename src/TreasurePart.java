@@ -1,3 +1,5 @@
+import java.awt.*;
+
 /**
  * Definierar vad som händer när denna del grävs.
  *
@@ -14,8 +16,9 @@ public class TreasurePart extends Diggable {
      */
     public TreasurePart(TreasureGroup group) {
 
-        super(group.getName(), group.getValue());
+        super(group.getName(), group.getValue(), Color.ORANGE);
         this.group = group;
+
     }
     /**
      * Definierar vad som händer när denna del grävs.
@@ -27,4 +30,5 @@ public class TreasurePart extends Diggable {
 
         return group.digPart();
     }
+
 }

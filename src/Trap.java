@@ -1,3 +1,5 @@
+import java.awt.*;
+
 /**
  * Representerar en fälla i spelet som kan påverka spelaren negativt vid grävning.
  * Varje fälla har en typ och en specifik effekt, till exempel poängförlust eller besättningsförlust.
@@ -12,7 +14,7 @@ public class Trap extends Diggable {
      * @param trapType Typen av fällan.
      */
     public Trap(TrapType trapType) {
-        super(trapType.getName(), trapType.getEffectValue());
+        super(trapType.getName(), trapType.getEffectValue(), Color.RED);
         this.trapType = trapType;
     }
     /**

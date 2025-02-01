@@ -1,3 +1,5 @@
+import java.awt.*;
+
 /**
  * Klass som representerar en överraskning på spelbrädet.
  * Kan ha olika typer av effekter såsom extra tur eller slumpmässiga drag.
@@ -12,7 +14,7 @@ public class Surprise extends Diggable {
      * @param type Typen av överraskningen.
      */
     public Surprise(SurpriseType type) {
-        super(type.getName(), 0);
+        super(type.getName(), 0, Color.CYAN);
         this.type = type;
     }
     /**
