@@ -2,6 +2,7 @@
  * Definierar vad som händer när denna del grävs.
  *
  * @return Ett {@link DigResult} som innehåller resultatet av grävningen.
+ * @author Mustafa Cansu
  */
 
 public class TreasurePart extends Diggable {
@@ -12,7 +13,7 @@ public class TreasurePart extends Diggable {
      * @param group Skattgruppen som delen tillhör.
      */
     public TreasurePart(TreasureGroup group) {
-        // group.getName() gibi bir isim, group.getValue() gibi bir toplam puan olabilir
+
         super(group.getName(), group.getValue());
         this.group = group;
     }
@@ -23,7 +24,7 @@ public class TreasurePart extends Diggable {
      */
     @Override
     public DigResult onDig() {
-        // Bu hücre kazıldığında, grup içinde "1 hücre daha kazıldı" diye işaretleriz
+
         return group.digPart();
     }
 }

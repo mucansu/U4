@@ -8,7 +8,7 @@
  * - RANDOM_DIG: Gräver automatiskt upp en slumpmässig ruta.
  * - FORCED_RANDOM_NEXT: Tvingar spelaren att gräva en slumpmässig ruta i nästa drag.
  *
- * @author Mustafa
+ * @author Mustafa Cansu
  */
 public enum SurpriseType {
     EXTRA_CREW("Extra Crew"),

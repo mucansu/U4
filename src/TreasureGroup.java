@@ -2,15 +2,15 @@
  * Representerar en grupp av sammanhängande skatter som delas upp i flera delar.
  * Gruppens poäng tillfaller spelaren som gräver den sista delen av skatten.
  *
- * @author Mustafa
+ * @author Mustafa Cansu
  */
 
 public class TreasureGroup {
-    private String name;        // Örneğin "T-form treasure"
-    private int totalValue;     // Tüm define bitince verilecek puan
-    private int totalCells;     // Kaç hücre var
-    private int dugCells;       // Kaç hücre kazıldı
-    private boolean claimed;    // Daha önce bir oyuncu bu define puanını aldı mı?
+    private String name;
+    private int totalValue;
+    private int totalCells;
+    private int dugCells;
+    private boolean claimed;
     /**
      * Skapar en ny skattgrupp med ett namn, totalt värde och antal celler.
      *
@@ -36,15 +36,14 @@ public class TreasureGroup {
      */
     public DigResult digPart() {
         if (claimed) {
-            // Zaten puan birine gitti, bu demektir ki define tam kazılmış
-            // ama tekrardan kazılıyor gibi bir durum normalde olmaz.
+
             return new DigResult(name, 0, 0,
                     "Already claimed treasure: " + name,
                     false, false);
         }
         dugCells++;
         if (dugCells < totalCells) {
-            // Henüz define tamamlanmadı, 0 puan
+
             return new DigResult(name, 0, 0,
                     "You found part of " + name + "! (" + dugCells + "/" + totalCells + ")",
                     false, false);

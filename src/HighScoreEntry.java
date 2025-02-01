@@ -2,7 +2,7 @@
  * Klass som representerar en post i highscore-listan.
  * Innehåller spelarens namn och poäng.
  *
- * @author Mustafa
+ * @author Mustafa Cansu
  */
 public class HighScoreEntry {
     private String name;

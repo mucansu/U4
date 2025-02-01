@@ -5,7 +5,7 @@ import java.awt.*;
  * Innehåller spelbrädet och kontrollpaneler för att visa spelarpoäng, besättningsstatus
  * och andra interaktiva element.
  *
- * @author Mustafa
+ * @author Mustafa Cansu
  */
 public class GameView extends JFrame {
     private JButton[][] buttons;
@@ -14,7 +14,7 @@ public class GameView extends JFrame {
     private JLabel turnLabel;
 
     private GameController controller;
-    // Konstruktor och metoder
+
     /**
      * Skapar ett nytt grafiskt fönster för spelet med ett visst brädstorlek.
      *
@@ -25,7 +25,7 @@ public class GameView extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Board panel
+
         JPanel boardPanel = new JPanel(new GridLayout(size, size));
         buttons = new JButton[size][size];
 
@@ -39,7 +39,7 @@ public class GameView extends JFrame {
             }
         }
         add(boardPanel, BorderLayout.CENTER);
-        // GameView constructor'da buton ekleyelim
+
 
 
         // Info panel
@@ -50,7 +50,7 @@ public class GameView extends JFrame {
         JButton endGameButton = new JButton("End Game");
         endGameButton.addActionListener(e -> controller.endGameManually());
 
-        infoPanel.add(endGameButton); // Butonu panel’e ekle
+        infoPanel.add(endGameButton);
         for (int i = 0; i < 2; i++) {
             scoreLabels[i] = new JLabel("Player " + (i + 1) + " Score: 0");
             crewLabels[i] = new JLabel("Player " + (i + 1) + " Crew: 3");
@@ -102,11 +102,12 @@ public class GameView extends JFrame {
         JOptionPane.showMessageDialog(this, message);
     }
 
+
     public String showTop10Message() {
-        // Kullanıcıdan isim al
+
         String name = JOptionPane.showInputDialog("Congrats, you made the top 10! Enter your name:");
         if (name == null || name.trim().isEmpty()) {
-            name = "Anonymous"; // Eğer boş bırakılırsa varsayılan isim
+            name = "Anonymous";
         }
         return name.trim();
     }
@@ -116,7 +117,7 @@ public class GameView extends JFrame {
                 buttons[i][j].setText("");
                 buttons[i][j].setEnabled(true);
                 buttons[i][j].setBackground(null);
-                // Arzu ederseniz butonun varsayılan rengi verilebilir
+
             }
         }
     }

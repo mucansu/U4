@@ -2,7 +2,7 @@
  * Klass som representerar en överraskning på spelbrädet.
  * Kan ha olika typer av effekter såsom extra tur eller slumpmässiga drag.
  *
- * @author Mustafa
+ * @author Mustafa Cansu
  */
 public class Surprise extends Diggable {
     private SurpriseType type;

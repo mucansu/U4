@@ -2,17 +2,17 @@
  * Klass som representerar resultatet av en grävning i spelet.
  * Innehåller information om poängförändring, besättningsförändring och eventuella effekter.
  *
- * @author Mustafa
+ * @author Mustafa Cansu
  */
 public class DigResult {
-    private final String name;       // Örneğin "Spiked Pit", "Gold Box", "Surprise" vb.
-    private final int scoreChange;   // (+) veya (-) puan
-    private final int crewChange;    // (+) veya (-) crew
-    private final String message;    // Kullanıcıya gösterilecek mesaj
+    private final String name;
+    private final int scoreChange;
+    private final int crewChange;
+    private final String message;
 
-    // Overraskning etkileri gibi ek alanlar isterseniz burada tutabilirsiniz
-    private final boolean extraTurn;       // Örnek: sürpriz ile ekstra tur verilsin mi?
-    private final boolean forcedRandomNext; // Örnek: bir sonraki hamle rastgele mi olsun?
+
+    private final boolean extraTurn;
+    private final boolean forcedRandomNext;
     /**
      * Konstruktor för att skapa ett grävningsresultat.
      *

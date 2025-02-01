@@ -2,7 +2,7 @@
  * Representerar en fälla i spelet som kan påverka spelaren negativt vid grävning.
  * Varje fälla har en typ och en specifik effekt, till exempel poängförlust eller besättningsförlust.
  *
- * @author Mustafa
+ * @author Mustafa Cansu
  */
 public class Trap extends Diggable {
     private TrapType trapType;
@@ -22,10 +22,10 @@ public class Trap extends Diggable {
      */
     @Override
     public DigResult onDig() {
-        // Farklı trapType senaryoları
+
         switch (trapType) {
             case FIXED_SCORE_LOSS:
-                // Örneğin 100 puan kaybettir
+
                 return new DigResult(
                         trapType.getName(),
                         -trapType.getEffectValue(), // -100
@@ -35,8 +35,7 @@ public class Trap extends Diggable {
                         false
                 );
             case PERCENT_TO_OPPONENT:
-                // Rakibe kendi puanından belli yüzde ver
-                // Controller bu veriyi isPercent tipinde bir field ile ayıklayabilir
+
                 return new DigResult(
                         trapType.getName(),
                         0, // puanı buradan düşmemek, Controller handle edebilir
@@ -46,7 +45,7 @@ public class Trap extends Diggable {
                         false
                 );
             case CREW_LOSS:
-                // 1 crew kaybettir
+
                 return new DigResult(
                         trapType.getName(),
                         0,

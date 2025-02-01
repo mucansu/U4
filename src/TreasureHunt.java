@@ -5,7 +5,7 @@ import javax.swing.SwingUtilities;
  *
  * Använder sig av SwingUtilities för att säkerställa att GUI-element körs på rätt tråd.
  *
- * @author Mustafa
+ * @author Mustafa Cansu
  */
 public class TreasureHunt {
     /**

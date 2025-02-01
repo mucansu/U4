@@ -4,7 +4,7 @@ import java.util.*;
  * Klass som hanterar highscore-listan, inklusive att spara, ladda och lägga till nya poster.
  * Highscore-listan sparas i en textfil och är begränsad till de 10 bästa resultaten.
  *
- * @author Mustafa
+ * @author Mustafa Cansu
  */
 public class HighScoreManager {
     private List<HighScoreEntry> highScores;
@@ -26,14 +26,14 @@ public class HighScoreManager {
      * @param score Spelarens poäng.
      */
     public void addHighScore(String name, int score) {
-        // Yeni skor kaydını ekle
+
         highScores.add(new HighScoreEntry(name, score));
 
-        // Manuel sıralama
+
         for (int i = 0; i < highScores.size() - 1; i++) {
             for (int j = i + 1; j < highScores.size(); j++) {
                 if (highScores.get(i).getScore() < highScores.get(j).getScore()) {
-                    // İkisini yer değiştir
+
                     HighScoreEntry temp = highScores.get(i);
                     highScores.set(i, highScores.get(j));
                     highScores.set(j, temp);
@@ -41,7 +41,7 @@ public class HighScoreManager {
             }
         }
 
-        // İlk 10'dan fazlaysa sonuncuyu kaldır
+
         if (highScores.size() > 10) {
             highScores.remove(highScores.size() - 1);
         }
@@ -70,7 +70,7 @@ public class HighScoreManager {
                 }
             }
         } catch (IOException | NumberFormatException e) {
-            // Dosya yoksa sorun değil, boş liste
+
         }
     }
     /**
@@ -93,13 +93,11 @@ public class HighScoreManager {
      * @return True om poängen kvalificerar sig, annars false.
      */
     public boolean qualifies(int score) {
-        // Henüz 10’dan az kayıt varsa otomatik olarak girer
+
         if (highScores.size() < 10) {
             return true;
         }
-        // Aksi halde, listede en düşük 10. skordan büyükse girer
-        // highScores listesi en yüksekten düşüğe sıralanmışsa,
-        // son eleman en düşük skordur
+
         int lastIndex = highScores.size() - 1;
         int lowestTopScore = highScores.get(lastIndex).getScore();
         return score > lowestTopScore;

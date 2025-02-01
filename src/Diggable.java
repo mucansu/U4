@@ -2,7 +2,7 @@
  * Abstrakt klass som representerar ett grävbart objekt i spelet.
  * Varje grävbart objekt kan vara en skatt, fälla eller överraskning.
  *
- * @author Mustafa
+ * @author Mustafa Cansu
  */
 public abstract class Diggable {
     protected String type;

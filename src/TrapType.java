@@ -3,7 +3,7 @@
  * Varje typ har ett namn och en effekt som kan vara en fast poängförlust,
  * procentförlust till motståndaren eller besättningsförlust.
  *
- * @author Mustafa
+ * @author Mustafa Cansu
  */
 public enum TrapType {
     FIXED_SCORE_LOSS("Fixed Score Loss", 100),

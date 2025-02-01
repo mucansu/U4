@@ -5,7 +5,7 @@ import java.util.List;
  * Kontrollklass som hanterar spelets logik, spelbrädet och spelarnas interaktioner.
  * Implementerar reglerna och ansvarar för att hantera händelser i spelet.
  *
- * @author Mustafa
+ * @author Mustafa Cansu
  */
 public class GameController {
     private Diggable[][] board;
@@ -113,7 +113,7 @@ public class GameController {
         board[3][2] = new TreasurePart(lShape);
         allTreasures.add(lShape);
 
-        // 2) Tek hücrelik define
+        // 2)
         TreasureGroup single1 = new TreasureGroup("SingleGold", 75, 1);
         board[9][9] = new TreasurePart(single1);
         allTreasures.add(single1);
@@ -126,7 +126,7 @@ public class GameController {
         board[6][6] = new TreasurePart(tShape);
         allTreasures.add(tShape);
 
-        // 4) Kare (Square) Shape
+        // 4)  (Square) Shape
         TreasureGroup squareShape = new TreasureGroup("SquareShape", 40, 4);
         board[2][6] = new TreasurePart(squareShape);
         board[2][7] = new TreasurePart(squareShape);
@@ -134,13 +134,13 @@ public class GameController {
         board[3][7] = new TreasurePart(squareShape);
         allTreasures.add(squareShape);
 
-        // 5) İkili (2 hücreli) Treasure
+        // 5)
         TreasureGroup twoCellTreasure = new TreasureGroup("TwoCell", 30, 2);
         board[8][4] = new TreasurePart(twoCellTreasure);
         board[8][5] = new TreasurePart(twoCellTreasure);
         allTreasures.add(twoCellTreasure);
 
-        // 6) Trap’ler (Daha fazla Crew Loss eklenmiştir)
+        // 6) Trap
         board[1][3] = new Trap(TrapType.FIXED_SCORE_LOSS);
         board[7][1] = new Trap(TrapType.PERCENT_TO_OPPONENT);
         board[4][4] = new Trap(TrapType.CREW_LOSS);
@@ -148,11 +148,10 @@ public class GameController {
         board[6][2] = new Trap(TrapType.CREW_LOSS);
         board[5][3] = new Trap(TrapType.CREW_LOSS);
 
-        // 7) Surprise’ler (FORCED_RANDOM_NEXT kaldırıldı)
+        // 7) Surprise
         board[0][2] = new Surprise(SurpriseType.EXTRA_CREW);
         board[6][8] = new Surprise(SurpriseType.EXTRA_TURN_PER_CREW);
 
-        // Kalan hücreler boş
     }
 
     /**
@@ -162,77 +161,94 @@ public class GameController {
      * @param col Kolumnpositionen på spelbrädet.
      */
     public void dig(int row, int col) {
-        if (crewMembers[currentPlayer] <= 0) {
-            view.displayMessage("Player " + (currentPlayer+1) + " has no crew!");
-            return;
-        }
-
+        boolean hasCrewMember = validateCrewMembers();
+        if (!hasCrewMember) return;
 
         if (board[row][col] != null) {
-            Diggable entity = board[row][col];
-            DigResult result = entity.onDig();
-            board[row][col] = null; // Kazdık, artık boş
-
-            // Puan güncellemesi
-            int newScore = playerScores[currentPlayer] + result.getScoreChange();
-            if (newScore < 0) newScore = 0;
-            playerScores[currentPlayer] = newScore;
-
-            // Crew güncellemesi
-            int newCrew = crewMembers[currentPlayer] + result.getCrewChange();
-            if (newCrew < 0) newCrew = 0;
-            crewMembers[currentPlayer] = newCrew;
-
-            // Trap: eğer "Percent Score to Opponent" vb. (trapType = PERCENT_TO_OPPONENT)
-            if (result.getName().equals("Percent Score To Opponent")) {
-                // %20 rakibe verelim
-                int give = (int) (playerScores[currentPlayer] * 0.2);
-                playerScores[currentPlayer] -= give;
-                playerScores[1 - currentPlayer] += give;
-            }
-
-            // Renk seçimi: treasure -> turuncu, trap -> kırmızı, surprise -> mavi
-            Color cellColor = Color.GRAY; // default
-            if (entity instanceof TreasurePart) cellColor = Color.ORANGE;
-            else if (entity instanceof Trap) cellColor = Color.RED;
-            else if (entity instanceof Surprise) cellColor = Color.CYAN;
-
-            // Arayüzde butonun text’i, rengi
-            view.updateBoard(row, col, result.getName(), cellColor);
-            view.updateScore(playerScores);
-            view.updateCrew(crewMembers);
-
-            // Mesaj
-            if (result.getMessage()!=null && !result.getMessage().isEmpty()) {
-                view.displayMessage("Player " + (currentPlayer+1) + ": " + result.getMessage());
-            }
-
-            // Sürpriz ek efekt
-            if (result.isExtraTurn()) {
-                // Örneğin "extraMoves[currentPlayer] = crewMembers[currentPlayer];"
-                extraMoves[currentPlayer] = crewMembers[currentPlayer];
-            }
-            if (result.isForcedRandomNext()) {
-                forcedRandom[currentPlayer] = true;
-            }
-
+            handleDigAction(row, col);
         } else {
-            // Boş hücre
-            view.updateBoard(row, col, "X", Color.LIGHT_GRAY);
+            updateBoardAndUI(row, col, "X", Color.LIGHT_GRAY);
         }
 
-        // Hamle bitti
-        // ExtraMove varsa bir hamle daha kullanılabilir
+        finalizeTurn();
+    }
+    private boolean validateCrewMembers() {
+        if (crewMembers[currentPlayer] <= 0) {
+            view.displayMessage("Player " + (currentPlayer + 1) + " has no crew left!");
+            return false;
+        }
+        return true;
+    }
+
+
+    private void handleDigAction(int row, int col) {
+        Diggable entity = board[row][col];
+        DigResult result = entity.onDig();
+        board[row][col] = null;
+
+        updateScoresAndCrew(result);
+        applyTrapEffect(result);
+        Color cellColor = determineCellColor(entity);
+        updateBoardAndUI(row, col, result.getName(), cellColor);
+
+
+        if (result.getMessage() != null && !result.getMessage().isEmpty()) {
+            view.displayMessage("Player " + (currentPlayer + 1) + ": " + result.getMessage());
+        }
+
+        applySurpriseEffect(result);
+    }
+
+    private void updateScoresAndCrew(DigResult result) {
+
+        int newScore = playerScores[currentPlayer] + result.getScoreChange();
+        playerScores[currentPlayer] = Math.max(newScore, 0);
+
+        int newCrew = crewMembers[currentPlayer] + result.getCrewChange();
+        crewMembers[currentPlayer] = Math.max(newCrew, 0);
+    }
+
+    private void applyTrapEffect(DigResult result) {
+        if (result.getName().equals("Percent Score To Opponent")) {
+            int give = (int) (playerScores[currentPlayer] * 0.2);
+            playerScores[currentPlayer] -= give;
+            playerScores[1 - currentPlayer] += give;
+        }
+    }
+
+    private Color determineCellColor(Diggable entity) {
+        if (entity instanceof TreasurePart) return Color.ORANGE;
+        if (entity instanceof Trap) return Color.RED;
+        if (entity instanceof Surprise) return Color.CYAN;
+        return Color.GRAY; // Varsayılan
+    }
+
+    private void updateBoardAndUI(int row, int col, String text, Color cellColor) {
+        view.updateBoard(row, col, text, cellColor);
+        view.updateScore(playerScores);
+        view.updateCrew(crewMembers);
+    }
+
+    private void applySurpriseEffect(DigResult result) {
+        if (result.isExtraTurn()) {
+            extraMoves[currentPlayer] = crewMembers[currentPlayer];
+        }
+        if (result.isForcedRandomNext()) {
+            forcedRandom[currentPlayer] = true;
+        }
+    }
+
+    private void finalizeTurn() {
         if (extraMoves[currentPlayer] > 0) {
             extraMoves[currentPlayer]--;
-            // Yine currentPlayer kazmaya devam
-            view.displayMessage("Extra move for Player " + (currentPlayer+1));
+            view.displayMessage("Player " + (currentPlayer + 1) + " gets an extra move!");
         } else {
             nextTurn();
-        }
 
+        }
         checkGameOver();
     }
+
     /**
      * Växlar tur till nästa spelare.
      */
@@ -307,27 +323,24 @@ public class GameController {
             view.displayMessage("GAME OVER. No Winner! ");
         }
         else {
-            // Skorları göster
+
             view.displayMessage("GAME OVER. Winner is Player " + (winnerIndex + 1)
                     + " with score " + playerScores[winnerIndex]);
 
-            // Highscore list (eğer yeterince yüksekse adını sor)
             int winnerScore = playerScores[winnerIndex];
             if (highScoreManager.qualifies(winnerScore)) {
-                // Kullanıcıdan isim al
+
                 String winnerName = view.showTop10Message();
                 highScoreManager.addHighScore(winnerName, winnerScore);
                 highScoreManager.saveHighScores();
             }
 
-            // Highscores göster
             StringBuilder sb = new StringBuilder("=== Highscores ===\n");
             for (HighScoreEntry e : highScoreManager.getHighScores()) {
                 sb.append(e.getName()).append(" -> ").append(e.getScore()).append("\n");
             }
             view.displayMessage(sb.toString());
 
-            // Yeni oyun başlat
             startNewGame();
         }
 
@@ -357,22 +370,7 @@ public class GameController {
         currentPlayer = 0;
         view.updateTurn(currentPlayer);
     }
-    /**
-     * Plockar en slumpmässig tom cell på spelbrädet.
-     *
-     * @return En array med rad- och kolumnindex för en slumpmässig cell.
-     */
-    private int[] pickRandomCell() {
-        // Rastgele bir hücre seç
-        int rows = board.length;
-        int cols = board[0].length;
-        while (true) {
-            int r = (int)(Math.random()*rows);
-            int c = (int)(Math.random()*cols);
-            // Orayı kazılmamış bile kazabilir.
-            return new int[]{r,c};
-        }
-    }
+
     /**
      * Avslutar spelet manuellt via GUI.
      */
