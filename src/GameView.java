@@ -34,6 +34,7 @@ public class GameView extends JFrame {
                 buttons[i][j] = new JButton("");
                 int finalI = i;
                 int finalJ = j;
+
                 buttons[i][j].addActionListener(e -> controller.dig(finalI, finalJ));
                 boardPanel.add(buttons[i][j]);
             }
@@ -65,6 +66,10 @@ public class GameView extends JFrame {
 
         pack();
         setVisible(true);
+    }
+    public int chooseBoard() {
+        Object[] options = {"Board 1", "Board 2"};
+        return JOptionPane.showOptionDialog(this, "Choose Board", "New Game", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
     }
     /**
      * Kopplar GameController till vyn för att hantera användarens interaktioner.

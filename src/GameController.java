@@ -29,7 +29,9 @@ public class GameController {
      * @param size Storleken på spelbrädet.
      * @param view Spelvyn för att uppdatera GUI.
      */
-    public GameController(int size, GameView view) {
+    public GameController(int size, GameView view, int boardType) {
+        if (boardType == 1) initializeBoard();
+        else initializeBoard2();
         this.view = view;
         board = new Diggable[size][size];
         playerScores = new int[]{0, 0};
@@ -162,7 +164,9 @@ public class GameController {
      */
     public void dig(int row, int col) {
         boolean hasCrewMember = validateCrewMembers();
-        if (!hasCrewMember) return;
+        if (!hasCrewMember) {
+            return;
+        }
 
         if (board[row][col] != null) {
             handleDigAction(row, col);
@@ -182,14 +186,16 @@ public class GameController {
 
 
     private void handleDigAction(int row, int col) {
+
         Diggable entity = board[row][col];
         DigResult result = entity.onDig();
         board[row][col] = null;
 
         updateScoresAndCrew(result);
         applyTrapEffect(result);
-        Color cellColor = determineCellColor(entity);
-        updateBoardAndUI(row, col, result.getName(), cellColor);
+
+        updateBoardAndUI(row, col, result.getName(), entity.getColor());
+
 
 
         if (result.getMessage() != null && !result.getMessage().isEmpty()) {
@@ -197,6 +203,7 @@ public class GameController {
         }
 
         applySurpriseEffect(result);
+
     }
 
     private void updateScoresAndCrew(DigResult result) {
@@ -216,13 +223,6 @@ public class GameController {
         }
     }
 
-    private Color determineCellColor(Diggable entity) {
-        if (entity instanceof TreasurePart) return Color.ORANGE;
-        if (entity instanceof Trap) return Color.RED;
-        if (entity instanceof Surprise) return Color.CYAN;
-        return Color.GRAY; // Varsayılan
-    }
-
     private void updateBoardAndUI(int row, int col, String text, Color cellColor) {
         view.updateBoard(row, col, text, cellColor);
         view.updateScore(playerScores);
@@ -239,6 +239,7 @@ public class GameController {
     }
 
     private void finalizeTurn() {
+        checkGameOver();
         if (extraMoves[currentPlayer] > 0) {
             extraMoves[currentPlayer]--;
             view.displayMessage("Player " + (currentPlayer + 1) + " gets an extra move!");
@@ -246,7 +247,7 @@ public class GameController {
             nextTurn();
 
         }
-        checkGameOver();
+
     }
 
     /**
@@ -267,6 +268,7 @@ public class GameController {
         // Ekip 0?
         if (crewMembers[currentPlayer] <= 0) {
             endGame(1 - currentPlayer);
+            view.displayMessage("Player " + (currentPlayer+1) + " has no crew left!");
             return;
         }
         // 2. Tüm hücreler kazıldıysa oyun biter
@@ -323,7 +325,10 @@ public class GameController {
             view.displayMessage("GAME OVER. No Winner! ");
         }
         else {
+            if (crewMembers[currentPlayer] <= 0) {
 
+                view.displayMessage("Player " + (currentPlayer + 1) + " has no crew left!");
+            }
             view.displayMessage("GAME OVER. Winner is Player " + (winnerIndex + 1)
                     + " with score " + playerScores[winnerIndex]);
 
