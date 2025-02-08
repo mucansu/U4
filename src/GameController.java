@@ -29,9 +29,7 @@ public class GameController {
      * @param size Storleken på spelbrädet.
      * @param view Spelvyn för att uppdatera GUI.
      */
-    public GameController(int size, GameView view, int boardType) {
-        if (boardType == 1) initializeBoard();
-        else initializeBoard2();
+    public GameController(int size, GameView view) {
         this.view = view;
         board = new Diggable[size][size];
         playerScores = new int[]{0, 0};
